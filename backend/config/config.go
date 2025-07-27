@@ -14,11 +14,7 @@ import (
 var DB *mongo.Database
 
 func InitConfig() {
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	
 	mongoURI := os.Getenv("MONGO_URI")
 	if mongoURI == "" {
 		log.Fatal("MONGO_URI is not set in .env file")
