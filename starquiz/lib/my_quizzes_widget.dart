@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 
+import 'package:starquiz/attent_quiz_screen.dart';
+
 class MyQuizzesWidget extends StatefulWidget {
   const MyQuizzesWidget({super.key});
 
@@ -124,7 +126,31 @@ class _MyQuizzesWidgetState extends State<MyQuizzesWidget> {
                 ),
               ),
               trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {},
+              onTap: () async {
+                final quizID = quiz['ID'] ?? quiz['_id'] ?? quiz['id'];
+                final url = Uri.parse(
+                  "https://gof-quiz-production-4390.up.railway.app/quiz/$quizID",
+                );
+                final response = await http.get(
+                  url,
+                  headers: {"Authorization": " Bearer $jwtToken"},
+                );
+                if (response.statusCode == 200) {
+                  final decoded = json.decode(response.body);
+                  final quizData = decoded['quiz'];
+                  if (quizData != null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => AttendQuizScreen(quiz: quizData),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Quiz not found')));
+                  }
+                }
+              },
               onLongPress: () async {
                 _deleteQuiz(quiz['ID'] ?? quiz['_id']);
               },

@@ -22,8 +22,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         brightness: Brightness.dark,
       ),
-      title: 'GOF Quiz', 
-      home: const LoginScreen());
+      title: 'GOF Quiz',
+      home: const LoginScreen(),
+    );
   }
 }
 
@@ -42,6 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkTokenAndRedirect();
+    });
 
     _appLinks = AppLinks();
     _linkStream = _appLinks.uriLinkStream;
@@ -60,7 +64,16 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     });
-    
+  }
+
+  Future<void> _checkTokenAndRedirect() async {
+    final token = await _secureStorage.read(key: 'jwt_token');
+    print('Token on startup: $token');
+    if (token != null && token.isNotEmpty && mounted) {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
+    }
   }
 
   @override
@@ -78,26 +91,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // Bright orange
+    return Scaffold(
+      // Bright orange
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             const SizedBox(height: 130),
             Center(
-              child: Image.asset(
-                'assets/images/welcome.png',
-                height: 400,
-              ),
+              child: Image.asset('assets/images/welcome.png', height: 400),
             ),
             const SizedBox(height: 20),
             Expanded(
               child: Container(
-                
                 padding: const EdgeInsets.all(20),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                  color: Colors.black
+                  color: Colors.black,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,12 +123,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 10),
                     RichText(
                       text: TextSpan(
-                        style: GoogleFonts.poppins(color: const Color.fromARGB(221, 255, 255, 255)),
+                        style: GoogleFonts.poppins(
+                          color: const Color.fromARGB(221, 255, 255, 255),
+                        ),
                         children: const [
                           TextSpan(text: "Upgrade For "),
                           TextSpan(
                             text: "Smart Learning",
-                            style: TextStyle(color: Colors.orange,fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -126,7 +141,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 10),
                     Text(
                       "Boost your knowledge with AI-driven quizzes. Get Started to unlock your full potential.",
-                      style: GoogleFonts.poppins(fontSize: 13, color: const Color.fromARGB(137, 255, 255, 255)),
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        color: const Color.fromARGB(137, 255, 255, 255),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
@@ -136,9 +154,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 24,
                         width: 24,
                       ),
-                      label: const Text("Continue With Google",style: TextStyle(fontWeight: FontWeight.bold),),
+                      label: const Text(
+                        "Continue With Google",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                        backgroundColor: const Color.fromARGB(
+                          255,
+                          255,
+                          255,
+                          255,
+                        ),
                         foregroundColor: const Color.fromARGB(255, 0, 0, 0),
                         minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
