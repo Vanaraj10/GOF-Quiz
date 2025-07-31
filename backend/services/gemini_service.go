@@ -28,14 +28,14 @@ func GenerateQuizWithGemini(topic string) (string, error) {
 Respond ONLY with a JSON array, where each item has:
 - "text": the question,
 - "options": an array of answer choices,
-- "answer": the correct answer.
+- "answer": the correct index.
 
 Example:
 [
   {
-    "text": "What is ...?",
-    "options": ["A", "B", "C", "D"],
-    "answer": "A"
+    "text": "Which of the following is a programming language?",
+	"options": ["Python", "HTML", "CSS", "SQL"],
+    "answer": 0
   }
 ]
 `, topic)
