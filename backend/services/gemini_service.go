@@ -24,7 +24,7 @@ func GenerateQuizWithGemini(topic string) (string, error) {
 	defer client.Close()
 
 	model := client.GenerativeModel("gemini-2.0-flash")
-	prompt := fmt.Sprintf(`Generate a quiz about "%s". The quiz should have 2 multiple choice questions.
+	prompt := fmt.Sprintf(`Generate a quiz about "%s". The quiz should have 20 multiple choice questions.
 Respond ONLY with a JSON array, where each item has:
 - "text": the question,
 - "options": an array of answer choices,
