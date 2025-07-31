@@ -12,5 +12,5 @@ type Quiz struct {
 type Question struct {
 	Text    string   `bson:"text"`
 	Options []string `bson:"options"`
-	Answer  string   `bson:"answer"`
+	Answer  int   `bson:"answer"`
 }
