@@ -68,8 +68,8 @@ class _CreateQuizWidgetState extends State<CreateQuizWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 !_loading
-                    ? Lottie.asset('assets/lotties/ai.json', width: 350, height: 350)
-                    : CircularProgressIndicator(),
+                    ? Lottie.asset('assets/lotties/ai.json', width: 350, height: 350,repeat: true)
+                    : const  CircularProgressIndicator(strokeWidth: 8.0, color: Colors.orange),
                 Text(
                   "Create Your Quiz",
                   style: GoogleFonts.poppins(

@@ -41,7 +41,6 @@ class _MyQuizzesWidgetState extends State<MyQuizzesWidget> {
       final decoded = json.decode(response.body);
       setState(() {
         _quizzes = decoded['quizzes'] ?? [];
-        print(_quizzes);
         _loading = false;
       });
     } else {
@@ -105,59 +104,68 @@ class _MyQuizzesWidgetState extends State<MyQuizzesWidget> {
     if (_quizzes.isEmpty) {
       return const Center(child: Text("No quizzes found."));
     }
-    return ListView.builder(
-      itemCount: _quizzes.length,
-      itemBuilder: (context, index) {
-        final quiz = _quizzes[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              title: Text(
-                textAlign: TextAlign.center,
-                quiz['Topic'] ?? 'Untitled',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 40,
-                ),
-              ),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () async {
-                final quizID = quiz['ID'] ?? quiz['_id'] ?? quiz['id'];
-                final url = Uri.parse(
-                  "https://gof-quiz-production-4390.up.railway.app/quiz/$quizID",
-                );
-                final response = await http.get(
-                  url,
-                  headers: {"Authorization": " Bearer $jwtToken"},
-                );
-                if (response.statusCode == 200) {
-                  final decoded = json.decode(response.body);
-                  final quizData = decoded['quiz'];
-                  if (quizData != null) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => AttendQuizScreen(quiz: quizData),
+    return Column(
+      children: [
+        const SizedBox(height: 16,),
+        Expanded(
+          child: ListView.builder(
+            itemCount: _quizzes.length,
+            itemBuilder: (context, index) {
+              final quiz = _quizzes[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                color: Colors.blueAccent,
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    title: Text(
+                      textAlign: TextAlign.center,
+                      quiz['Topic'] ?? 'Untitled',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
                       ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text('Quiz not found')));
-                  }
-                }
-              },
-              onLongPress: () async {
-                _deleteQuiz(quiz['ID'] ?? quiz['_id']);
-              },
-            ),
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios),
+                    onTap: () async {
+                      final quizID = quiz['ID'] ?? quiz['_id'] ?? quiz['id'];
+                      final url = Uri.parse(
+                        "https://gof-quiz-production-4390.up.railway.app/quiz/$quizID",
+                      );
+                      final response = await http.get(
+                        url,
+                        headers: {"Authorization": " Bearer $jwtToken"},
+                      );
+                      if (response.statusCode == 200) {
+                        final decoded = json.decode(response.body);
+                        final quizData = decoded['quiz'];
+                        if (quizData != null) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AttendQuizScreen(quiz: quizData),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('Quiz not found')));
+                        }
+                      }
+                    },
+                    onLongPress: () async {
+                      _deleteQuiz(quiz['ID'] ?? quiz['_id']);
+                    },
+                  ),
+                ),
+              );
+            },
           ),
-        );
-      },
+        ),
+        Text("Long Press to delete a quiz", style: TextStyle(fontSize: 16, color: Colors.grey),),
+      ],
     );
   }
 }

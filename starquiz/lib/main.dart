@@ -55,8 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
         await _secureStorage.write(key: 'jwt_token', value: token);
 
-        print('Token saved: $token');
-
         if (mounted) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -68,7 +66,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _checkTokenAndRedirect() async {
     final token = await _secureStorage.read(key: 'jwt_token');
-    print('Token on startup: $token');
     if (token != null && token.isNotEmpty && mounted) {
       Navigator.of(
         context,

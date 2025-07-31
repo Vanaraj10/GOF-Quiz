@@ -46,8 +46,23 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-
-        title: const Text("StarQuiz"),
+        backgroundColor: const Color.fromARGB(255, 67, 77, 83),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.vertical(
+            bottom: Radius.elliptical(12, 12),
+          )
+        ),
+        title : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.star, size: 30, color: Colors.orange),
+            const SizedBox(width: 10),
+            _selectedIndex == 0
+                ? const Text("StarQuiz", style: TextStyle(fontSize: 30))
+                : const Text("My Quizzes", style: TextStyle(fontSize: 30),),
+          ],
+        ),
+       
       ),
       body: jwtToken == null
           ? Center(child: CircularProgressIndicator(),)
